@@ -26,7 +26,7 @@
                 <div class="box box-default">
                     @if ($accessory->id)
                         <div class="box-header with-border">
-                            <h3 class="box-title">{{ $accessory->name }}</h3>
+                            <h2 class="box-title">{{ $accessory->name }}</h2>
                         </div><!-- /.box-header -->
                     @endif
 
@@ -48,8 +48,8 @@
                                     <div class="form-group {{ $errors->has('note') ? 'error' : '' }}">
                                         <label for="note" class="col-md-2 control-label">{{ trans('admin/hardware/form.notes') }}</label>
                                         <div class="col-md-7">
-                                            <textarea class="col-md-6 form-control" id="note" name="note">{{ Input::old('note', $accessory->note) }}</textarea>
-                                            {!! $errors->first('note', '<span class="alert-msg"><i class="fa fa-times"></i> :message</span>') !!}
+                                            <textarea class="col-md-6 form-control" id="note" name="note">{{ old('note', $accessory->note) }}</textarea>
+                                            {!! $errors->first('note', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
                                         </div>
                                     </div>
                             <!-- Checkout/Checkin Date -->
@@ -58,7 +58,7 @@
                                 <div class="col-md-8">
                                     <div class="input-group col-md-5 required">
                                         <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-end-date="0d" data-autoclose="true">
-                                            <input type="text" class="form-control" placeholder="{{ trans('general.select_date') }}" name="checkin_at" id="checkin_at" value="{{ Input::old('checkin_at', date('Y-m-d')) }}">
+                                            <input type="text" class="form-control" placeholder="{{ trans('general.select_date') }}" name="checkin_at" id="checkin_at" value="{{ Request::old('checkin_at', date('Y-m-d')) }}">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                         </div>
                                         {!! $errors->first('checkin_at', '<span class="alert-msg"><i class="fa fa-times"></i> :message</span>') !!}
@@ -69,7 +69,7 @@
                               </div>
                         <div class="box-footer">
                             <a class="btn btn-link" href="{{ URL::previous() }}">{{ trans('button.cancel') }}</a>
-                            <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check icon-white"></i>
+                            <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-check icon-white" aria-hidden="true"></i>
                                 {{ trans('general.checkin') }}</button>
                         </div>
 

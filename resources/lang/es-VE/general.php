@@ -207,6 +207,7 @@
     'username_format'		=> 'Formato de Nombre de Usuario',
     'update'                => 'Actualizar',
     'upload_filetypes_help'      => 'Algunos tipos de archivos permitidos son png, gif, jpg, jpeg, doc, docx, pdf, xls, txt, lic, zip, rtf y rar. Tamaño máximo permitido: :size.',
+El tamaño máximo de archivo es :size.',
     'uploaded'              => 'Actualizado',
     'user'					=> 'Usuario',
     'accepted'			    => 'aceptado',

@@ -62,7 +62,7 @@ final class CompaniesController extends Controller
         $company = new Company;
         $company->name = $request->input('name');
 
-        $company = $request->handleImages($company);
+        $company = $request->handleImages($company,600, public_path().'/uploads/companies');
 
         if ($company->save()) {
             return redirect()->route('companies.index')
@@ -113,7 +113,9 @@ final class CompaniesController extends Controller
 
         $company->name = $request->input('name');
 
-        $company = $request->handleImages($company);
+       
+        $company = $request->handleImages($company,600, public_path().'/uploads/companies');
+
 
         if ($company->save()) {
             return redirect()->route('companies.index')

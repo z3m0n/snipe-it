@@ -69,8 +69,8 @@ class SuppliersController extends Controller
         $supplier->notes                = request('notes');
         $supplier->url                  = $supplier->addhttp(request('url'));
         $supplier->user_id              = Auth::id();
+        $supplier = $request->handleImages($supplier,600, public_path().'/uploads/suppliers');
 
-        $supplier = $request->handleImages($supplier);
 
         if ($supplier->save()) {
             return redirect()->route('suppliers.index')->with('success', trans('admin/suppliers/message.create.success'));
@@ -87,7 +87,7 @@ class SuppliersController extends Controller
      */
     public function edit($supplierId = null)
     {
-        $this->authorize('edit', Supplier::class);
+        $this->authorize('update', Supplier::class);
         // Check if the supplier exists
         if (is_null($item = Supplier::find($supplierId))) {
             // Redirect to the supplier  page
@@ -108,7 +108,7 @@ class SuppliersController extends Controller
      */
     public function update($supplierId = null, ImageUploadRequest $request)
     {
-        $this->authorize('edit', Supplier::class);
+        $this->authorize('update', Supplier::class);
         // Check if the supplier exists
         if (is_null($supplier = Supplier::find($supplierId))) {
             // Redirect to the supplier  page
@@ -129,9 +129,7 @@ class SuppliersController extends Controller
         $supplier->email                = request('email');
         $supplier->url                  = $supplier->addhttp(request('url'));
         $supplier->notes                = request('notes');
-
-        $supplier = $request->handleImages($supplier);
-
+        $supplier = $request->handleImages($supplier,600, public_path().'/uploads/suppliers');
 
         if ($supplier->save()) {
             return redirect()->route('suppliers.index')->with('success', trans('admin/suppliers/message.update.success'));
@@ -191,7 +189,7 @@ class SuppliersController extends Controller
         if (isset($supplier->id)) {
                 return view('suppliers/view', compact('supplier'));
         }
-        // Redirect to the user management page
+
         return redirect()->route('suppliers.index')->with('error', trans('admin/suppliers/message.does_not_exist'));
     }
 

@@ -86,6 +86,10 @@ class LdapAd extends LdapAdConfiguration
      */
     public function ldapLogin(string $username, string $password): User
     {
+        if ($this->ldapSettings['ad_append_domain']) {
+            $username .= '@' . $this->ldapSettings['ad_domain'];
+        }
+
         try {
             $this->ldap->auth()->attempt($username, $password);
         } catch (Exception $e) {
@@ -322,7 +326,7 @@ class LdapAd extends LdapAdConfiguration
     private function getFilter(): ?string
     {
         $filter = $this->ldapSettings['ldap_filter'];
-        if ('' === $filter) {
+        if (!$filter) {
             return null;
         }
         // Add surrounding parentheses as needed
@@ -366,7 +370,7 @@ class LdapAd extends LdapAdConfiguration
      * Test the bind user connection.
      *
      * @author Wes Hulette <jwhulette@gmail.com>
-     *
+     * @throws \Exception
      * @since 5.0.0
      */
     public function testLdapAdBindConnection(): void
@@ -383,7 +387,7 @@ class LdapAd extends LdapAdConfiguration
      * Test the user can connect to the LDAP server.
      *
      * @author Wes Hulette <jwhulette@gmail.com>
-     *
+     * @throws \Exception
      * @since 5.0.0
      */
     public function testLdapAdUserConnection(): void
@@ -430,11 +434,9 @@ class LdapAd extends LdapAdConfiguration
      *
      * @since 5.0.0
      *
-     * @param int $page The paged results to get
-     *
      * @return \Adldap\Query\Paginator
      */
-    public function getLdapUsers(int $page=0): Paginator
+    public function getLdapUsers(): Paginator
     {
         $search = $this->ldap->search()->users()->in($this->getBaseDn());
 
@@ -444,6 +446,6 @@ class LdapAd extends LdapAdConfiguration
         }
 
         return $search->select($this->getSelectedFields())
-            ->paginate(self::PAGE_SIZE, $page);
+            ->paginate(self::PAGE_SIZE);
     }
 }

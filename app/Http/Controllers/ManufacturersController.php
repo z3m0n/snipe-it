@@ -70,9 +70,7 @@ class ManufacturersController extends Controller
         $manufacturer->support_url      = $request->input('support_url');
         $manufacturer->support_phone    = $request->input('support_phone');
         $manufacturer->support_email    = $request->input('support_email');
-
-
-        $manufacturer = $request->handleImages($manufacturer,'manufacturers');
+        $manufacturer = $request->handleImages($manufacturer,600, public_path().'/uploads/manufacturers');
 
 
 
@@ -94,11 +92,14 @@ class ManufacturersController extends Controller
      */
     public function edit($manufacturerId = null)
     {
-        $this->authorize('edit', Manufacturer::class);
+        // Handles manufacturer checks and permissions.
+        $this->authorize('update', Manufacturer::class);
+
         // Check if the manufacturer exists
-        if (is_null($item = Manufacturer::find($manufacturerId))) {
+        if (!$item = Manufacturer::find($id)) {
             return redirect()->route('manufacturers.index')->with('error', trans('admin/manufacturers/message.does_not_exist'));
         }
+        
         // Show the page
         return view('manufacturers/edit', compact('item'));
     }
@@ -117,7 +118,7 @@ class ManufacturersController extends Controller
      */
     public function update(ImageUploadRequest $request, $manufacturerId = null)
     {
-        $this->authorize('edit', Manufacturer::class);
+        $this->authorize('update', Manufacturer::class);
         // Check if the manufacturer exists
         if (is_null($manufacturer = Manufacturer::find($manufacturerId))) {
             // Redirect to the manufacturer  page
@@ -130,8 +131,13 @@ class ManufacturersController extends Controller
         $manufacturer->support_url      = $request->input('support_url');
         $manufacturer->support_phone    = $request->input('support_phone');
         $manufacturer->support_email    = $request->input('support_email');
+        
+        // Set the model's image property to null if the image is being deleted
+        if ($request->input('image_delete') == 1) {
+            $manufacturer->image = null;
+        }
 
-        $manufacturer = $request->handleImages($manufacturer);
+        $manufacturer = $request->handleImages($manufacturer,600, public_path().'/uploads/manufacturers');
 
 
         if ($manufacturer->save()) {
@@ -226,8 +232,4 @@ class ManufacturersController extends Controller
         return redirect()->back()->with('error', trans('admin/manufacturers/message.does_not_exist'));
 
     }
-
-   
-
-
 }

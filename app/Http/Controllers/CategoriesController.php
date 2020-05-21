@@ -76,7 +76,7 @@ class CategoriesController extends Controller
         $category->checkin_email        = $request->input('checkin_email', '0');
         $category->user_id              = Auth::id();
 
-        $category = $request->handleImages($category);
+        $category = $request->handleImages($category,600, public_path().'/uploads/categories');
 
         if ($category->save()) {
             return redirect()->route('categories.index')->with('success', trans('admin/categories/message.create.success'));
@@ -97,7 +97,7 @@ class CategoriesController extends Controller
      */
     public function edit($categoryId = null)
     {
-        $this->authorize('edit', Category::class);
+        $this->authorize('update', Category::class);
         if (is_null($item = Category::find($categoryId))) {
             return redirect()->route('categories.index')->with('error', trans('admin/categories/message.does_not_exist'));
         }
@@ -119,7 +119,7 @@ class CategoriesController extends Controller
      */
     public function update(ImageUploadRequest $request, $categoryId = null)
     {
-        $this->authorize('edit', Category::class);
+        $this->authorize('update', Category::class);
         if (is_null($category = Category::find($categoryId))) {
             // Redirect to the categories management page
             return redirect()->to('admin/categories')->with('error', trans('admin/categories/message.does_not_exist'));
@@ -135,7 +135,8 @@ class CategoriesController extends Controller
         $category->require_acceptance   = $request->input('require_acceptance', '0');
         $category->checkin_email        = $request->input('checkin_email', '0');
 
-        $category = $request->handleImages($category);
+
+        $category = $request->handleImages($category,600, public_path().'/uploads/categories');
 
         if ($category->save()) {
             // Redirect to the new category page
@@ -210,9 +211,6 @@ class CategoriesController extends Controller
                 ->with('category_type_route',$category_type_route);
         }
 
-        // Prepare the error message
-        // Redirect to the user management page
-        return redirect()->route('categories.index')
-            ->with('error', trans('admin/categories/message.does_not_exist'));
+        return redirect()->route('categories.index')->with('error', trans('admin/categories/message.does_not_exist'));
     }
 }

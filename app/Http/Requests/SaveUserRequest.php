@@ -3,8 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\Setting;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
-class SaveUserRequest extends Request
+class SaveUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,6 +18,12 @@ class SaveUserRequest extends Request
     {
         return true;
     }
+
+    public function response(array $errors)
+    {
+        return $this->redirector->back()->withInput()->withErrors($errors, $this->errorBag);
+    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -61,4 +70,5 @@ class SaveUserRequest extends Request
         return $rules;
 
     }
+
 }
